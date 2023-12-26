@@ -40,3 +40,8 @@ pathcat("/users/:user_id/posts/:post_id", {
 });
 // => '/users/123/posts/456?cool_flag=true'
 ```
+
+## Notes:
+
+- Any params or query string values that are `undefined` will be omitted.
+- Params that were not specified in the object will be left as is.

@@ -74,4 +74,16 @@ describe("pathcat()", () => {
 			"https://example.com/users/1/posts//test"
 		);
 	});
+
+	it("Passing undefined should be treated as if the param was missing", () => {
+		assert.equal(
+			pathcat("/users/:user/posts/:post", { user: "1", post: undefined }),
+			"/users/1/posts/:post"
+		);
+
+		assert.equal(
+			pathcat("https://example.com", "/users/:user/posts/:post", { user: "1", post: undefined }),
+			"https://example.com/users/1/posts/:post"
+		);
+	});
 });

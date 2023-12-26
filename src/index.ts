@@ -76,7 +76,7 @@ function pathcatInternal(template: string, params: Query<string>) {
 
 	const queryParams = new URLSearchParams();
 	for (const [key, value] of Object.entries(params)) {
-		if (!usedKeys.has(key)) {
+		if (!usedKeys.has(key) && value !== undefined) {
 			queryParams.set(key, `${value}`);
 		}
 	}
