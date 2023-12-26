@@ -1,8 +1,23 @@
 {
 	"name": "pathcat",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "pathcat makes URLs easy",
-	"repository": "https://github.com/alii/pathcat",
+	"homepage": "https://github.com/alii/pathcat",
+	"repository": {
+		"type": "git",
+		"url": "git+github.com:alii/pathcat.git"
+	},
+	"bugs": {
+		"url": "https://github.com/alii/pathcat/issues/new"
+	},
+	"keywords": [
+		"url",
+		"params",
+		"path",
+		"builder",
+		"query",
+		"stringify"
+	],
 	"author": "Alistair Smith <hi@alistair.sh>",
 	"license": "MIT",
 	"packageManager": "yarn@4.0.2",
