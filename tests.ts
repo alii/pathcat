@@ -91,6 +91,8 @@ describe("pathcat()", () => {
 			}),
 			"test?user_id=1234"
 		);
+
+		assert.equal(pathcat(base, "/path/to/resource"), "test/path/to/resource");
 	});
 
 	it("Passing undefined should be treated as if the param was missing", () => {

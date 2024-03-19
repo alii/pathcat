@@ -1,5 +1,9 @@
 {
+	"$schema": "https://jsr.io/schema/config-file.v1.json",
 	"name": "@alistair/pathcat",
 	"version": "1.2.0",
-	"exports": "./src/index.ts"
+	"exports": "./src/index.ts",
+	"publish": {
+		"include": ["./src/**/*", "./jsr.json", "./README.md", "./tsconfig.json"]
+	}
 }

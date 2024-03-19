@@ -1,11 +1,20 @@
+/**
+ * Represents a parameter value that can be used in a URL query or path.
+ */
 export type ParamValue = string | number | boolean | null | undefined;
 
+/**
+ * Drops the protocol from the start of a url string
+ */
 export type DropProtocol<T extends string> = T extends `${infer _Protocol extends
 	| "http"
 	| "https"}://${infer Rest}`
 	? Rest
 	: T;
 
+/**
+ * Extracts url parameters from a route template string
+ */
 export type ExtractRouteParams<T extends string> = string extends T
 	? string
 	: T extends `${string}:${infer Param}/${infer Rest}`
@@ -14,6 +23,10 @@ export type ExtractRouteParams<T extends string> = string extends T
 	? Param
 	: never;
 
+/**
+ * Represents a query object, where each key is a parameter name and each value is a parameter value.
+ * If the template has URL params (like `/users/:user_id/posts`), the query object must contain at least the user_id param
+ */
 export type Query<Template extends string> = Record<ExtractRouteParams<Template>, ParamValue> &
 	Record<string, ParamValue>;
 
@@ -48,18 +61,35 @@ export function join(a: string, b: string): string {
 }
 
 /**
+ * Checks if a path template has parameters. Used to determine the order of arguments in `pathcat()`.
+ */
+export type DoesPathHaveParams<Path extends string> = string extends Path
+	? false
+	: ExtractRouteParams<DropProtocol<Path>> extends never
+	? false
+	: true;
+
+/**
  * Joins a path template with a query object, returning a path with the query appended and parameters replaced.
  * @param template The path template to join with the query
  * @param base The base URL to join with the path
  * @param query The query to append to the path
  */
 export function pathcat<Path extends string>(
-	...[base, path, query]: ExtractRouteParams<DropProtocol<Path>> extends never
-		? [path: Path, query?: Query<string>] | [base: string, path: Path, query?: Query<string>]
+	// prettier-ignore
+	...args: DoesPathHaveParams<Path> extends false
+		?
+				| [base: string, path: Path | Query<Path>]
+				| [base: string, path: Path, query: Query<Path>]
 		:
 				| [path: Path, query: Query<DropProtocol<Path>>]
 				| [base: string, path: Path, query: Query<DropProtocol<Path>>]
-): string {
+): string;
+
+/**
+ * Internal implementation of `pathcat()`.
+ */
+export function pathcat(base: string, path?: string | Query<string>, query?: Query<string>) {
 	return pathcatInternal(
 		typeof path === "string" ? join(base, path) : base,
 		(typeof path === "object" ? path : query) ?? {}
