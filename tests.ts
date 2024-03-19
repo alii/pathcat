@@ -9,7 +9,7 @@ describe("join()", () => {
 		assert.equal(join("first/", "second"), "first/second");
 		assert.equal(join("first", "/second"), "first/second");
 		assert.equal(join("first/", "/second"), "first/second");
-		assert.equal(join("first////", "////second"), "first/second");
+		assert.equal(join("first////", "////second"), "first///////second");
 		assert.equal(join("", "second"), "/second");
 		assert.equal(join("first", ""), "first/");
 		assert.equal(join("/", "second"), "/second");
@@ -31,6 +31,13 @@ describe("pathcat()", () => {
 				post: "2",
 			}),
 			"/users/1/posts/2"
+		);
+
+		assert.equal(
+			pathcat("/first", "//second/:user_id", {
+				user_id: "1234",
+			}),
+			"/first//second/1234"
 		);
 
 		assert.equal(
@@ -72,6 +79,17 @@ describe("pathcat()", () => {
 		assert.equal(
 			pathcat("https://example.com", "/users/:user/posts/:post/test", { user: "1", post: "" }),
 			"https://example.com/users/1/posts//test"
+		);
+	});
+
+	it("Should work with untyped base paths", () => {
+		let base: string = "test";
+
+		assert.equal(
+			pathcat(base, {
+				user_id: "1234",
+			}),
+			"test?user_id=1234"
 		);
 	});
 

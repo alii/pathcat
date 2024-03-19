@@ -28,33 +28,37 @@ export type Query<Template extends string> = Record<ExtractRouteParams<Template>
  * join("a", "b"); // "a/b"
  * join("a/", "/b"); // "a/b"
  * join("a", "/b"); // "a/b"
+ * join("a/", "//b"); // "a//b"
+ * join("a", "//b"); // "a//b"
  * ```
  */
 export function join(a: string, b: string): string {
-	return `${a.replace(/\/+$/, "")}/${b.replace(/^\/+/, "")}`;
+	const aEndsWithSlash = a.endsWith("/");
+	const bStartsWithSlash = b.startsWith("/");
+
+	if (aEndsWithSlash && bStartsWithSlash) {
+		return a + b.slice(1);
+	}
+
+	if (!aEndsWithSlash && !bStartsWithSlash) {
+		return `${a}/${b}`;
+	}
+
+	return a + b;
 }
 
 /**
  * Joins a path template with a query object, returning a path with the query appended and parameters replaced.
  * @param template The path template to join with the query
+ * @param base The base URL to join with the path
  * @param query The query to append to the path
  */
-export function pathcat<Template extends string>(
-	template: Template,
-	query?: Query<DropProtocol<Template>>
-): string;
-
-/**
- * Joins a path template with a query object, returning a path with the query appended and parameters replaced.
- * @param template The path template to join with the query
- * @param query The query to append to the path
- */
-export function pathcat<Path extends string>(base: string, path: Path, query?: Query<Path>): string;
-
-export function pathcat(
-	base: string,
-	path?: string | Query<string>,
-	query?: Query<string>
+export function pathcat<Path extends string>(
+	...[base, path, query]: ExtractRouteParams<DropProtocol<Path>> extends never
+		? [path: Path, query?: Query<string>] | [base: string, path: Path, query?: Query<string>]
+		:
+				| [path: Path, query: Query<DropProtocol<Path>>]
+				| [base: string, path: Path, query: Query<DropProtocol<Path>>]
 ): string {
 	return pathcatInternal(
 		typeof path === "string" ? join(base, path) : base,
@@ -62,13 +66,15 @@ export function pathcat(
 	);
 }
 
+const regexp = /\/:([a-zA-Z0-9_]+)/g;
+
 function pathcatInternal(template: string, params: Query<string>) {
 	const usedKeys = new Set<string>();
 
-	const path = template.replace(/\/:([a-zA-Z0-9_]+)/g, (match, key) => {
+	const path = template.replace(regexp, (match, key) => {
 		if (params[key] !== undefined) {
 			usedKeys.add(key);
-			return `/${encodeURIComponent(`${params[key]}`)}`;
+			return `/${encodeURIComponent(params[key] as string)}`;
 		}
 
 		return match;
@@ -77,7 +83,7 @@ function pathcatInternal(template: string, params: Query<string>) {
 	const queryParams = new URLSearchParams();
 	for (const [key, value] of Object.entries(params)) {
 		if (!usedKeys.has(key) && value !== undefined) {
-			queryParams.set(key, `${value}`);
+			queryParams.set(key, value as string);
 		}
 	}
 

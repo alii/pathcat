@@ -421,12 +421,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^20.10.5":
-  version: 20.10.5
-  resolution: "@types/node@npm:20.10.5"
+"@types/benchmark@npm:^2.1.5":
+  version: 2.1.5
+  resolution: "@types/benchmark@npm:2.1.5"
+  checksum: 31ca163891bea0dbe28ad517ae95d18531518049e95cfac218e082590b33edd75cda23fc3e4abf72112b3928e844488c9b029b33aa29f825a83a16d2ed202154
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:^20.10.8":
+  version: 20.10.8
+  resolution: "@types/node@npm:20.10.8"
   dependencies:
     undici-types: "npm:~5.26.4"
-  checksum: be30609aae0bfe492097815f166ccc07f465220cb604647fa4e5ec05a1d16c012a41b82b5f11ecfe2485cbb479d4d20384b95b809ca0bcff6d94d5bbafa645bb
+  checksum: 93268c33c3bf0194427d696658160c77ab8661aa57107df5b248ff952898a372bf92cf0ba7fc07788fa35e59c69b6619cce63d45e4e67fca806e37da7ea42512
   languageName: node
   linkType: hard
 
@@ -530,6 +537,16 @@ __metadata:
   version: 1.0.2
   resolution: "balanced-match@npm:1.0.2"
   checksum: 9308baf0a7e4838a82bbfd11e01b1cb0f0cf2893bc1676c27c2a8c0e70cbae1c59120c3268517a8ae7fb6376b4639ef81ca22582611dbee4ed28df945134aaee
+  languageName: node
+  linkType: hard
+
+"benchmark@npm:^2.1.4":
+  version: 2.1.4
+  resolution: "benchmark@npm:2.1.4"
+  dependencies:
+    lodash: "npm:^4.17.4"
+    platform: "npm:^1.3.3"
+  checksum: 510224c01f7578e9aa60cef67ec3dd8f84ac6670007bcc96285f87865375122aca0853ab4e542cc80cfeeed436356dfdd63bb66cb5e72365abb912685b2139be
   languageName: node
   linkType: hard
 
@@ -1253,6 +1270,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"lodash@npm:^4.17.4":
+  version: 4.17.21
+  resolution: "lodash@npm:4.17.21"
+  checksum: d8cbea072bb08655bb4c989da418994b073a608dffa608b09ac04b43a791b12aeae7cd7ad919aa4c925f33b48490b5cfe6c1f71d827956071dae2e7bb3a6b74c
+  languageName: node
+  linkType: hard
+
 "lru-cache@npm:^10.0.1, lru-cache@npm:^9.1.1 || ^10.0.0":
   version: 10.1.0
   resolution: "lru-cache@npm:10.1.0"
@@ -1584,7 +1608,9 @@ __metadata:
   resolution: "pathcat@workspace:."
   dependencies:
     "@arethetypeswrong/cli": "npm:^0.13.5"
-    "@types/node": "npm:^20.10.5"
+    "@types/benchmark": "npm:^2.1.5"
+    "@types/node": "npm:^20.10.8"
+    benchmark: "npm:^2.1.4"
     tsup: "npm:^8.0.1"
     tsx: "npm:^4.7.0"
     typescript: "npm:^5.3.3"
@@ -1602,6 +1628,13 @@ __metadata:
   version: 4.0.6
   resolution: "pirates@npm:4.0.6"
   checksum: 00d5fa51f8dded94d7429700fb91a0c1ead00ae2c7fd27089f0c5b63e6eca36197fe46384631872690a66f390c5e27198e99006ab77ae472692ab9c2ca903f36
+  languageName: node
+  linkType: hard
+
+"platform@npm:^1.3.3":
+  version: 1.3.6
+  resolution: "platform@npm:1.3.6"
+  checksum: 69f2eb692e15f1a343dd0d9347babd9ca933824c8673096be746ff66f99f2bdc909fadd8609076132e6ec768349080babb7362299f2a7f885b98f1254ae6224b
   languageName: node
   linkType: hard
 

@@ -1,0 +1,5 @@
+{
+	"name": "@alistair/pathcat",
+	"version": "1.2.0",
+	"exports": "./src/index.ts"
+}

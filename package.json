@@ -1,6 +1,6 @@
 {
 	"name": "pathcat",
-	"version": "1.1.0",
+	"version": "1.2.0",
 	"description": "pathcat makes URLs easy",
 	"homepage": "https://github.com/alii/pathcat",
 	"repository": {
@@ -42,7 +42,9 @@
 	},
 	"devDependencies": {
 		"@arethetypeswrong/cli": "^0.13.5",
-		"@types/node": "^20.10.5",
+		"@types/benchmark": "^2.1.5",
+		"@types/node": "^20.10.8",
+		"benchmark": "^2.1.4",
 		"tsup": "^8.0.1",
 		"tsx": "^4.7.0",
 		"typescript": "^5.3.3"
