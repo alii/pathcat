@@ -45,7 +45,7 @@ pathcat("/users/:user_id/posts/:post_id", {
 
 Results when running `bun run benchmark.ts` on an M3 Max
 
-````
+```
 pathcat x 1,132,795 ops/sec ±0.74% (95 runs sampled)
 ```
 
@@ -53,4 +53,3 @@ pathcat x 1,132,795 ops/sec ±0.74% (95 runs sampled)
 
 - Any params or query string values that are `undefined` will be omitted.
 - Params that were not specified in the object will be left as is.
-````
