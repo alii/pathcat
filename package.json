@@ -1,6 +1,6 @@
 {
 	"name": "pathcat",
-	"version": "1.2.2",
+	"version": "1.2.3",
 	"description": "pathcat makes URLs easy",
 	"homepage": "https://github.com/alii/pathcat",
 	"repository": {
@@ -31,7 +31,7 @@
 	],
 	"scripts": {
 		"build": "yarn test && tsup src/index.ts --dts --format cjs,esm && attw --pack .",
-		"test": "node --test --import=tsx/esm ./tests.ts",
+		"test": "node --test --import=tsx/esm \"**/*test.ts\"",
 		"release": "yarn build && yarn npm publish"
 	},
 	"exports": {

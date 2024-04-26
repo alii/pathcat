@@ -79,7 +79,7 @@ export function pathcat<Path extends string>(
 	// prettier-ignore
 	...args: DoesPathHaveParams<Path> extends false
 		?
-				| [base: string, path: Path | Query<Path>]
+				| [base: string, path: Path | Query<DropProtocol<Path>>]
 				| [base: string, path: Path, query: Query<Path>]
 		:
 				| [path: Path, query: Query<DropProtocol<Path>>]

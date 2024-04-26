@@ -70,6 +70,13 @@ describe("pathcat()", () => {
 		);
 	});
 
+	it("Should work with just a base path and query object", () => {
+		assert.equal(
+			pathcat("https://example.com", { user_id: "1234" }),
+			"https://example.com?user_id=1234"
+		);
+	});
+
 	it("Should handle empty params as if they existed anyway", () => {
 		assert.equal(
 			pathcat("/users/:user/posts/:post/test", { user: "1", post: "" }),
