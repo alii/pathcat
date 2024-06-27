@@ -50,6 +50,16 @@ describe("pathcat()", () => {
 		);
 
 		assert.equal(
+			pathcat("/users/:user/posts/:post", {
+				user: "1",
+				post: "2",
+				field: ["name", "age"],
+				param: true,
+			}),
+			"/users/1/posts/2?field=name&field=age&param=true"
+		);
+
+		assert.equal(
 			pathcat("https://example.com", "/users/:user_id/posts", {
 				user_id: "1234",
 				limit: 20,

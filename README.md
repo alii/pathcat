@@ -39,6 +39,15 @@ pathcat("/users/:user_id/posts/:post_id", {
 	cool_flag: true,
 });
 // => '/users/123/posts/456?cool_flag=true'
+
+// You can also use arrays for query string values
+pathcat("/users/:user_id/posts/:post_id", {
+	user_id: "123",
+	post_id: 456,
+	cool_flag: true,
+	fields: ["title", "body"],
+});
+// => '/users/123/posts/456?cool_flag=true&fields=title&fields=body'
 ```
 
 ## Benchmark:

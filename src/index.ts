@@ -1,7 +1,13 @@
 /**
- * Represents a parameter value that can be used in a URL query or path.
+ * Represents a parameter value that can be used in a URL path.
  */
 export type ParamValue = string | number | boolean | null | undefined;
+
+/**
+ * Represents a parameter value that can be used in a URL query.
+ * This can be either a single value or an array of values.
+ */
+export type QueryValue = ParamValue | ParamValue[];
 
 /**
  * Drops the protocol from the start of a url string
@@ -28,7 +34,7 @@ export type ExtractRouteParams<T extends string> = string extends T
  * If the template has URL params (like `/users/:user_id/posts`), the query object must contain at least the user_id param
  */
 export type Query<Template extends string> = Record<ExtractRouteParams<Template>, ParamValue> &
-	Record<string, ParamValue>;
+	Record<string, QueryValue>;
 
 /**
  * Joins two paths together, removing any duplicate slashes between them.
@@ -113,7 +119,15 @@ function pathcatInternal(template: string, params: Query<string>) {
 	const queryParams = new URLSearchParams();
 	for (const [key, value] of Object.entries(params)) {
 		if (!usedKeys.has(key) && value !== undefined) {
-			queryParams.set(key, value as string);
+			if (Array.isArray(value)) {
+				for (const item of value) {
+					if (item !== undefined && item !== null) {
+						queryParams.append(key, String(item));
+					}
+				}
+			} else {
+				queryParams.set(key, String(value));
+			}
 		}
 	}
 
