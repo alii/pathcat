@@ -35,6 +35,7 @@
 		"release": "yarn build && yarn npm publish"
 	},
 	"exports": {
+		"./package.json": "./package.json",
 		".": {
 			"import": "./dist/index.js",
 			"require": "./dist/index.cjs"

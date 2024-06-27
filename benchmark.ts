@@ -20,7 +20,7 @@ suite
 			skip: 10,
 		});
 	})
-	.add("pathcat() With a base URL, and no params", () => {
+	.add("With a base URL, and no params", () => {
 		// @ts-expect-error
 		pathcat("https://example.com", "/users/:user_id/posts/:post_id/reactions");
 	})

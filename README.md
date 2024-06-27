@@ -9,6 +9,8 @@ This library owes thanks to urlcat, but unfortunately it seems to be abandoned. 
 - Very intuitive API
 - Supports URL params and query string
 - Avoids double slashes
+- Zero dependencies
+- Absolutely tiny install size
 
 ## Install
 
@@ -55,7 +57,9 @@ pathcat("/users/:user_id/posts/:post_id", {
 Results when running `bun run benchmark.ts` on an M3 Max
 
 ```
-pathcat x 1,132,795 ops/sec ±0.74% (95 runs sampled)
+With a base URL x 1,094,318 ops/sec ±1.29% (93 runs sampled)
+With no base URL x 1,119,821 ops/sec ±0.56% (95 runs sampled)
+With a base URL, and no params x 1,886,898 ops/sec ±0.67% (94 runs sampled)
 ```
 
 ## Notes:
