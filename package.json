@@ -20,7 +20,7 @@
 	],
 	"author": "Alistair Smith <hi@alistair.sh>",
 	"license": "MIT",
-	"packageManager": "yarn@4.0.2",
+	"packageManager": "yarn@4.3.1",
 	"type": "module",
 	"main": "./dist/index.cjs",
 	"types": "./dist/index.d.cts",
@@ -42,12 +42,12 @@
 		}
 	},
 	"devDependencies": {
-		"@arethetypeswrong/cli": "^0.13.5",
+		"@arethetypeswrong/cli": "^0.15.3",
 		"@types/benchmark": "^2.1.5",
-		"@types/node": "^20.10.8",
+		"@types/node": "^20.14.9",
 		"benchmark": "^2.1.4",
-		"tsup": "^8.0.1",
-		"tsx": "^4.7.0",
-		"typescript": "^5.3.3"
+		"tsup": "^8.1.0",
+		"tsx": "^4.15.7",
+		"typescript": "^5.5.2"
 	}
 }
