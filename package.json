@@ -20,7 +20,7 @@
 		"stringify"
 	],
 	"author": "Alistair Smith <hi@alistair.sh>",
-	"license": "MIT",
+	"license": "Unlicense",
 	"packageManager": "yarn@4.3.1",
 	"type": "module",
 	"main": "./dist/index.cjs",
