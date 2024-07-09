@@ -36,6 +36,11 @@ export type ExtractRouteParams<T extends string> = string extends T
 export type Query<Template extends string> = Record<ExtractRouteParams<Template>, ParamValue> &
 	Record<string, QueryValue>;
 
+// Defined early so we don't
+// need to reallocate strings
+const slash = "/";
+const qmark = "?";
+
 /**
  * Joins two paths together, removing any duplicate slashes between them.
  * @param a The first path to join
@@ -52,15 +57,15 @@ export type Query<Template extends string> = Record<ExtractRouteParams<Template>
  * ```
  */
 export function join(a: string, b: string): string {
-	const aEndsWithSlash = a.endsWith("/");
-	const bStartsWithSlash = b.startsWith("/");
+	const aEndsWithSlash = a.endsWith(slash);
+	const bStartsWithSlash = b.startsWith(slash);
 
 	if (aEndsWithSlash && bStartsWithSlash) {
 		return a + b.slice(1);
 	}
 
 	if (!aEndsWithSlash && !bStartsWithSlash) {
-		return `${a}/${b}`;
+		return a.concat(slash, b);
 	}
 
 	return a + b;
@@ -98,39 +103,65 @@ export function pathcat<Path extends string>(
 export function pathcat(base: string, path?: string | Query<string>, query?: Query<string>) {
 	return pathcatInternal(
 		typeof path === "string" ? join(base, path) : base,
-		(typeof path === "object" ? path : query) ?? {}
+		typeof path === "object" ? path : query ?? {}
 	);
 }
 
 const regexp = /\/:([a-zA-Z0-9_]+)/g;
 
+function paramValueToString(value: Exclude<ParamValue, undefined>) {
+	return value === null ? "null" : String(value);
+}
+
 function pathcatInternal(template: string, params: Query<string>) {
+	let path = template;
 	const usedKeys = new Set<string>();
 
-	const path = template.replace(regexp, (match, key) => {
-		if (params[key] !== undefined) {
+	path = path.replace(regexp, (full, key) => {
+		// full is like `/:user_id` and key is like `user_id`
+		if (key in params) {
 			usedKeys.add(key);
-			return `/${encodeURIComponent(params[key] as string)}`;
+			const value = params[key];
+
+			if (value === undefined || Array.isArray(value)) {
+				return full;
+			}
+
+			return slash.concat(paramValueToString(value));
 		}
 
-		return match;
+		return full;
 	});
 
+	const entries = Object.entries(params);
+
+	if (usedKeys.size === entries.length) {
+		return path;
+	}
+
 	const queryParams = new URLSearchParams();
-	for (const [key, value] of Object.entries(params)) {
-		if (!usedKeys.has(key) && value !== undefined) {
-			if (Array.isArray(value)) {
-				for (const item of value) {
-					if (item !== undefined && item !== null) {
-						queryParams.append(key, String(item));
-					}
+
+	for (const [key, value] of entries) {
+		if (usedKeys.has(key)) {
+			continue;
+		}
+
+		if (value === undefined) {
+			continue;
+		}
+
+		if (Array.isArray(value)) {
+			for (const item of value) {
+				if (item !== undefined) {
+					queryParams.append(key, paramValueToString(item));
 				}
-			} else {
-				queryParams.set(key, String(value));
 			}
+		} else {
+			queryParams.append(key, paramValueToString(value));
 		}
 	}
 
-	const queryString = queryParams.toString();
-	return queryString ? `${path}?${queryString}` : path;
+	const qs = queryParams.toString();
+
+	return qs.length > 0 ? path.concat(qmark, qs) : path;
 }

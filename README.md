@@ -54,12 +54,14 @@ pathcat("/users/:user_id/posts/:post_id", {
 
 ## Benchmark:
 
-Results when running `bun run benchmark.ts` on an M3 Max
+Results when running on an M3 Max
 
 ```
-With a base URL x 1,094,318 ops/sec ±1.29% (93 runs sampled)
-With no base URL x 1,119,821 ops/sec ±0.56% (95 runs sampled)
-With a base URL, and no params x 1,886,898 ops/sec ±0.67% (94 runs sampled)
+$ node --import=tsx benchmark.ts
+
+With a base URL x 1,446,429 ops/sec ±0.55% (94 runs sampled)
+With no base URL x 1,494,634 ops/sec ±0.43% (98 runs sampled)
+With a base URL, and no params x 2,720,270 ops/sec ±0.36% (93 runs sampled)
 ```
 
 ## Notes:

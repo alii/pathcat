@@ -34,13 +34,6 @@ describe("pathcat()", () => {
 		);
 
 		assert.equal(
-			pathcat("/first", "//second/:user_id", {
-				user_id: "1234",
-			}),
-			"/first//second/1234"
-		);
-
-		assert.equal(
 			pathcat("/users/:user/posts/:post", {
 				user: "1",
 				post: "2",
@@ -66,6 +59,29 @@ describe("pathcat()", () => {
 				skip: 20,
 			}),
 			"https://example.com/users/1234/posts?limit=20&skip=20"
+		);
+	});
+
+	it("Should correct handle double slashes", () => {
+		assert.equal(
+			pathcat("/first", "//second/:user_id", {
+				user_id: "1234",
+			}),
+			"/first//second/1234"
+		);
+
+		assert.equal(
+			pathcat("/first/", "/second/:user_id", {
+				user_id: "1234",
+			}),
+			"/first/second/1234"
+		);
+
+		assert.equal(
+			pathcat("/first/", "//second/:user_id", {
+				user_id: "1234",
+			}),
+			"/first//second/1234"
 		);
 	});
 
