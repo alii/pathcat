@@ -59,9 +59,9 @@ Results when running on an M3 Max
 ```
 $ node --import=tsx benchmark.ts
 
-With a base URL x 1,446,429 ops/sec ±0.55% (94 runs sampled)
-With no base URL x 1,494,634 ops/sec ±0.43% (98 runs sampled)
-With a base URL, and no params x 2,720,270 ops/sec ±0.36% (93 runs sampled)
+With a base URL x 2,628,829 ops/sec ±0.70% (95 runs sampled)
+With no base URL x 3,160,695 ops/sec ±0.50% (96 runs sampled)
+With a base URL, and no params x 70,782,166 ops/sec ±1.93% (88 runs sampled)
 ```
 
 ## Notes:
