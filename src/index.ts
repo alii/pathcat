@@ -113,12 +113,11 @@ function paramValueToString(value: Exclude<ParamValue, undefined>) {
 }
 
 function pathcatInternal(template: string, params: Query<string>) {
-	const entries = Object.entries(params);
 	let path = template;
 	let qs = "";
 
-	for (let i = 0; i < entries.length; i++) {
-		const [key, value] = entries[i] as [string, QueryValue];
+	for (const key in params) {
+		const value = params[key];
 
 		if (value === undefined) {
 			continue;
@@ -127,7 +126,7 @@ function pathcatInternal(template: string, params: Query<string>) {
 		const withColon = colon.concat(key);
 		if (path.includes(withColon)) {
 			if (Array.isArray(value)) {
-				return colon.concat(key);
+				return withColon;
 			}
 
 			path = path.replace(`:${key}`, paramValueToString(value));
@@ -148,7 +147,7 @@ function pathcatInternal(template: string, params: Query<string>) {
 		}
 	}
 
-	if (qs.length) {
+	if (qs.length !== 0) {
 		return path.concat(qmark.concat(qs).slice(0, qs.length));
 	}
 
