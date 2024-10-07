@@ -85,6 +85,25 @@ describe("pathcat()", () => {
 		);
 	});
 
+	it("Should handle trailing slashes by including them in the path", () => {
+		assert.equal(
+			pathcat("/users/:user/posts/:post/", {
+				user: "1",
+				post: "2",
+			}),
+			"/users/1/posts/2/"
+		);
+
+		assert.equal(
+			pathcat("/users/:user/posts/:post/", {
+				user: "1",
+				post: "2",
+				limit: 10,
+			}),
+			"/users/1/posts/2/?limit=10"
+		);
+	});
+
 	it("Should handle missing params by avoiding them", () => {
 		// @ts-expect-error
 		assert.equal(pathcat("/users/:user/posts/:post", { user: "1" }), "/users/1/posts/:post");

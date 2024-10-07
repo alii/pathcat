@@ -36,13 +36,14 @@ export type ExtractRouteParams<T extends string> = string extends T
 export type Query<Template extends string> = Record<ExtractRouteParams<Template>, ParamValue> &
 	Record<string, QueryValue>;
 
-// Defined early so we don't
-// need to reallocate
+// Defined early so we don't need to reallocate.
+// this is probably a minimal optimization
 const slash = "/";
 const qmark = "?";
 const eq = "=";
 const amp = "&";
 const emptyobj = {};
+const colon = ":";
 
 /**
  * Joins two paths together, removing up to 1 duplicate slashe between them
@@ -71,7 +72,7 @@ export function join(a: string, b: string): string {
 		return a.concat(slash, b);
 	}
 
-	return a + b;
+	return a.concat(b);
 }
 
 /**
@@ -107,51 +108,37 @@ export function pathcat(base: string, path?: string | Query<string>, query?: Que
 	);
 }
 
-const regexp = /\/:([a-zA-Z0-9_]+)/g;
-
 function paramValueToString(value: Exclude<ParamValue, undefined>) {
 	return value === null ? "null" : String(value);
 }
 
 function pathcatInternal(template: string, params: Query<string>) {
-	let path = template;
-	const usedKeys = new Set<string>();
-
-	path = path.replace(regexp, (full, key) => {
-		// full is like `/:user_id` and key is like `user_id`
-		if (key in params) {
-			usedKeys.add(key);
-			const value = params[key];
-
-			if (value === undefined || Array.isArray(value)) {
-				return full;
-			}
-
-			return slash.concat(paramValueToString(value));
-		}
-
-		return full;
-	});
-
 	const entries = Object.entries(params);
-
-	if (usedKeys.size === entries.length) {
-		return path;
-	}
-
+	let path = template;
 	let qs = "";
 
-	for (const [key, value] of entries) {
-		if (usedKeys.has(key)) {
-			continue;
-		}
+	for (let i = 0; i < entries.length; i++) {
+		const [key, value] = entries[i] as [string, QueryValue];
 
 		if (value === undefined) {
 			continue;
 		}
 
+		const withColon = colon.concat(key);
+		if (path.includes(withColon)) {
+			if (Array.isArray(value)) {
+				return colon.concat(key);
+			}
+
+			path = path.replace(`:${key}`, paramValueToString(value));
+
+			continue;
+		}
+
 		if (Array.isArray(value)) {
-			for (const item of value) {
+			for (let j = 0; j < value.length; j++) {
+				const item = value[j];
+
 				if (item !== undefined) {
 					qs += key.concat(eq, paramValueToString(item), amp);
 				}
