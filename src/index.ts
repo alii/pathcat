@@ -37,12 +37,15 @@ export type Query<Template extends string> = Record<ExtractRouteParams<Template>
 	Record<string, QueryValue>;
 
 // Defined early so we don't
-// need to reallocate strings
+// need to reallocate
 const slash = "/";
 const qmark = "?";
+const eq = "=";
+const amp = "&";
+const emptyobj = {};
 
 /**
- * Joins two paths together, removing any duplicate slashes between them.
+ * Joins two paths together, removing up to 1 duplicate slashe between them
  * @param a The first path to join
  * @param b The second path to join
  * @returns The joined path
@@ -97,13 +100,10 @@ export function pathcat<Path extends string>(
 				| [base: string, path: Path, query: Query<DropProtocol<Path>>]
 ): string;
 
-/**
- * Internal implementation of `pathcat()`.
- */
 export function pathcat(base: string, path?: string | Query<string>, query?: Query<string>) {
 	return pathcatInternal(
 		typeof path === "string" ? join(base, path) : base,
-		typeof path === "object" ? path : query ?? {}
+		typeof path === "object" ? path : query ?? emptyobj
 	);
 }
 
@@ -139,7 +139,7 @@ function pathcatInternal(template: string, params: Query<string>) {
 		return path;
 	}
 
-	const queryParams = new URLSearchParams();
+	let qs = "";
 
 	for (const [key, value] of entries) {
 		if (usedKeys.has(key)) {
@@ -153,15 +153,17 @@ function pathcatInternal(template: string, params: Query<string>) {
 		if (Array.isArray(value)) {
 			for (const item of value) {
 				if (item !== undefined) {
-					queryParams.append(key, paramValueToString(item));
+					qs += key.concat(eq, paramValueToString(item), amp);
 				}
 			}
 		} else {
-			queryParams.append(key, paramValueToString(value));
+			qs += key.concat(eq, paramValueToString(value), amp);
 		}
 	}
 
-	const qs = queryParams.toString();
+	if (qs.length) {
+		return path.concat(qmark.concat(qs).slice(0, qs.length));
+	}
 
-	return qs.length > 0 ? path.concat(qmark, qs) : path;
+	return path;
 }

@@ -1,5 +1,5 @@
 import Benchmark from "benchmark";
-import { pathcat } from "./src";
+import { pathcat } from "./src/index.ts";
 
 const suite = new Benchmark.Suite();
 
