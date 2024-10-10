@@ -16,14 +16,11 @@ describe("join()", () => {
 		assert.equal(join("first", "/"), "first/");
 		assert.equal(join("", ""), "/");
 		assert.equal(join("/", "/"), "/");
+	});
 
-		// check if it works with many paths
-		assert.equal(
-			join("first", "second", "third", "fourth"),
-			"first/second/third/fourth"
-		);
+	it("Should work with many paths", () => {
+		assert.equal(join("first", "second", "third", "fourth"), "first/second/third/fourth");
 
-		// check if it works with many paths AND slashes
 		assert.equal(
 			join("first////", "////second", "///third///", "////fourth"),
 			"first///////second///third//////fourth"
@@ -35,10 +32,7 @@ describe("pathcat()", () => {
 	it("Basic usage", () => {
 		assert.equal(pathcat("first", "second"), "first/second");
 
-		assert.equal(
-			pathcat("https://example.com", ":id", { id: "123" }),
-			"https://example.com/123"
-		);
+		assert.equal(pathcat("https://example.com", ":id", { id: "123" }), "https://example.com/123");
 
 		assert.equal(
 			pathcat("/users/:user/posts/:post", {
@@ -120,8 +114,8 @@ describe("pathcat()", () => {
 	});
 
 	it("Should handle missing params by avoiding them", () => {
-		// @ts-expect-error
 		assert.equal(
+			// @ts-expect-error
 			pathcat("/users/:user/posts/:post", { user: "1" }),
 			"/users/1/posts/:post"
 		);

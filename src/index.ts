@@ -44,6 +44,7 @@ const eq = "=";
 const amp = "&";
 const emptyobj = {};
 const colon = ":";
+const slashCharCode = slash.charCodeAt(0);
 
 /**
  * Joins multiple paths together, removing up to 1 duplicate slash between each pair
@@ -57,21 +58,24 @@ const colon = ":";
  * join("a", "/b", "//c"); // "a/b//c"
  * ```
  */
-export function join(...paths: string[]): string {
-	return paths.reduce((acc, path) => {
-		const accEndsWithSlash = acc.endsWith(slash);
-		const pathStartsWithSlash = path.startsWith(slash);
+export function join(...paths: [string, string, ...string[]]): string {
+	let result = paths[0];
+
+	for (let i = 1; i < paths.length; i++) {
+		const path = paths[i]!;
+		const accEndsWithSlash = result.charCodeAt(result.length - 1) === slashCharCode;
+		const pathStartsWithSlash = path.charCodeAt(0) === slashCharCode;
 
 		if (accEndsWithSlash && pathStartsWithSlash) {
-			return acc.concat(path.slice(1));
+			result = result.concat(path.slice(1));
+		} else if (!accEndsWithSlash && !pathStartsWithSlash) {
+			result = result.concat(slash, path);
+		} else {
+			result = result.concat(path);
 		}
+	}
 
-		if (!accEndsWithSlash && !pathStartsWithSlash) {
-			return acc.concat(slash, path);
-		}
-
-		return acc.concat(path);
-	});
+	return result;
 }
 
 /**
