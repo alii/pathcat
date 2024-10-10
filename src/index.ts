@@ -46,33 +46,32 @@ const emptyobj = {};
 const colon = ":";
 
 /**
- * Joins two paths together, removing up to 1 duplicate slashe between them
- * @param a The first path to join
- * @param b The second path to join
+ * Joins multiple paths together, removing up to 1 duplicate slash between each pair
+ * @param paths The paths to join
  * @returns The joined path
  *
  * @example
  * ```ts
- * join("a", "b"); // "a/b"
- * join("a/", "/b"); // "a/b"
- * join("a", "/b"); // "a/b"
- * join("a/", "//b"); // "a//b"
- * join("a", "//b"); // "a//b"
+ * join("a", "b", "c"); // "a/b/c"
+ * join("a/", "/b", "/c"); // "a/b/c"
+ * join("a", "/b", "//c"); // "a/b//c"
  * ```
  */
-export function join(a: string, b: string): string {
-	const aEndsWithSlash = a.endsWith(slash);
-	const bStartsWithSlash = b.startsWith(slash);
+export function join(...paths: string[]): string {
+	return paths.reduce((acc, path) => {
+		const accEndsWithSlash = acc.endsWith(slash);
+		const pathStartsWithSlash = path.startsWith(slash);
 
-	if (aEndsWithSlash && bStartsWithSlash) {
-		return a + b.slice(1);
-	}
+		if (accEndsWithSlash && pathStartsWithSlash) {
+			return acc.concat(path.slice(1));
+		}
 
-	if (!aEndsWithSlash && !bStartsWithSlash) {
-		return a.concat(slash, b);
-	}
+		if (!accEndsWithSlash && !pathStartsWithSlash) {
+			return acc.concat(slash, path);
+		}
 
-	return a.concat(b);
+		return acc.concat(path);
+	});
 }
 
 /**
