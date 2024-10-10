@@ -44,7 +44,7 @@ const eq = "=";
 const amp = "&";
 const emptyobj = {};
 const colon = ":";
-const slashCharCode = slash.charCodeAt(0);
+const slashCharCode = 47; // "/".charCodeAt(0);
 
 /**
  * Joins multiple paths together, removing up to 1 duplicate slash between each pair
