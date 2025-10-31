@@ -54,6 +54,22 @@ pathcat('/users/:user_id/posts/:post_id', {
 // => '/users/123/posts/456?cool_flag=true&fields=title&fields=body'
 ```
 
+## `base()` Function
+
+Create a reusable function with a base URL, useful for repeated usage on a specific base URL (e.g., when writing a RESTful HTTP API client):
+
+```typescript
+import { base } from 'pathcat';
+
+const api = base('https://api.example.com');
+
+api('/users/:id', { id: 123 });
+// => 'https://api.example.com/users/123'
+
+api('/posts/:post_id', { post_id: 456, include: ['author', 'comments'] });
+// => 'https://api.example.com/posts/456?include=author&include=comments'
+```
+
 ## Benchmark:
 
 Results when running on an M4 Max

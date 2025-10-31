@@ -1,6 +1,6 @@
 {
 	"name": "pathcat",
-	"version": "1.5.0",
+	"version": "1.5.1",
 	"description": "pathcat makes URLs easy",
 	"homepage": "https://github.com/alii/pathcat",
 	"sideEffects": false,
