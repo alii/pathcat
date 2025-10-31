@@ -165,13 +165,13 @@ function pathcatInternal(template: string, params: Query<string>) {
  *
  * @returns Function which accepts the path and query if required
  */
-export function base(base: string) {
-	return function <Path extends string>(
-		path: Path,
-		...query: [ExtractRouteParams<Path>] extends [never]
-			? [query?: Query<Path>]
-			: [query: Query<Path>]
-	) {
-		return pathcat(base, path, ...query);
-	};
+export function base(
+	base: string
+): <Path extends string>(
+	path: Path,
+	...query: [ExtractRouteParams<Path>] extends [never]
+		? [query?: Query<Path>]
+		: [query: Query<Path>]
+) => string {
+	return (path, ...query) => pathcat(base, path, ...query);
 }
