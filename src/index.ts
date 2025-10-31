@@ -4,17 +4,15 @@
 export type ParamValue = string | number | boolean | null | undefined;
 
 /**
- * Represents a parameter value that can be used in a URL query.
- * This can be either a single value or an array of values.
+ * Represents a parameter value that can be used in a URL query. This can be
+ * either a single value or an array of values.
  */
 export type QueryValue = ParamValue | ParamValue[];
 
 /**
  * Drops the protocol from the start of a url string
  */
-export type DropProtocol<T extends string> = T extends `${infer _Protocol extends
-	| "http"
-	| "https"}://${infer Rest}`
+export type DropProtocol<T extends string> = T extends `${'http' | 'https'}://${infer Rest}`
 	? Rest
 	: T;
 
@@ -30,20 +28,21 @@ export type ExtractRouteParams<T extends string> = string extends T
 	: never;
 
 /**
- * Represents a query object, where each key is a parameter name and each value is a parameter value.
- * If the template has URL params (like `/users/:user_id/posts`), the query object must contain at least the user_id param
+ * Represents a query object, where each key is a parameter name and each value
+ * is a parameter value. If the template has URL params (like
+ * `/users/:user_id/posts`), the query object must contain at least the user_id
+ * param
  */
 export type Query<Template extends string> = Record<ExtractRouteParams<Template>, ParamValue> &
 	Record<string, QueryValue>;
 
-// Defined early so we don't need to reallocate.
-// this is probably a minimal optimization
-const slash = "/";
-const qmark = "?";
-const eq = "=";
-const amp = "&";
+const slash = '/';
+const qmark = '?';
+const eq = '=';
+const amp = '&';
+const empty = '';
 const emptyobj = {};
-const colon = ":";
+const colon = ':';
 const slashCharCode = 47; // "/".charCodeAt(0);
 
 /**
@@ -79,45 +78,44 @@ export function join(...paths: [string, string, ...string[]]): string {
 }
 
 /**
- * Checks if a path template has parameters. Used to determine the order of arguments in `pathcat()`.
+ * Joins a path with a query object, returning a path with the parameters
+ * inserted and remaining url query values appended.
+ *
+ * @param path The path that will have parameters replaced and query appended to
+ * @param query The query to append to the path
  */
-export type DoesPathHaveParams<Path extends string> = string extends Path
-	? false
-	: ExtractRouteParams<DropProtocol<Path>> extends never
-	? false
-	: true;
+export function pathcat<Path extends string>(path: Path, query: Query<DropProtocol<Path>>): string;
 
 /**
- * Joins a path template with a query object, returning a path with the query appended and parameters replaced.
- * @param template The path template to join with the query
- * @param base The base URL to join with the path
+ * Joins a path with a query object, returning a path with the parameters
+ * inserted and remaining url query values appended.
+ *
+ * @param base The base url, probably like `https://api.example.com`
+ * @param path The path that will have parameters replaced and query appended to
  * @param query The query to append to the path
  */
 export function pathcat<Path extends string>(
-	// prettier-ignore
-	...args: DoesPathHaveParams<Path> extends false
-		?
-				| [base: string, path: Path | Query<DropProtocol<Path>>]
-				| [base: string, path: Path, query: Query<Path>]
-		:
-				| [path: Path, query: Query<DropProtocol<Path>>]
-				| [base: string, path: Path, query: Query<DropProtocol<Path>>]
+	base: string,
+	path: Path,
+	...query: [ExtractRouteParams<Path>] extends [never]
+		? [query?: Query<Path>]
+		: [query: Query<Path>]
 ): string;
 
 export function pathcat(base: string, path?: string | Query<string>, query?: Query<string>) {
 	return pathcatInternal(
-		typeof path === "string" ? join(base, path) : base,
-		typeof path === "object" ? path : query ?? emptyobj
+		typeof path === 'string' ? join(base, path) : base,
+		typeof path === 'object' ? path : query ?? emptyobj
 	);
 }
 
 function paramValueToString(value: Exclude<ParamValue, undefined>) {
-	return value === null ? "null" : String(value);
+	return value === null ? 'null' : String(value);
 }
 
 function pathcatInternal(template: string, params: Query<string>) {
 	let path = template;
-	let qs = "";
+	let qs = empty;
 
 	for (const key in params) {
 		const value = params[key];
@@ -150,9 +148,30 @@ function pathcatInternal(template: string, params: Query<string>) {
 		}
 	}
 
-	if (qs.length !== 0) {
-		return path.concat(qmark.concat(qs).slice(0, qs.length));
+	const len = qs.length;
+	if (len !== 0) {
+		return path.concat(qmark.concat(qs).slice(0, len));
 	}
 
 	return path;
+}
+
+/**
+ * Create a function that wraps a base URL, this is useful for repeated usage of
+ * pathcat on a specific base URL, for example when writing a client for an
+ * Restful HTTP API
+ *
+ * @param base - The base URL to use for the path
+ *
+ * @returns Function which accepts the path and query if required
+ */
+export function base(base: string) {
+	return function <Path extends string>(
+		path: Path,
+		...query: [ExtractRouteParams<Path>] extends [never]
+			? [query?: Query<Path>]
+			: [query: Query<Path>]
+	) {
+		return pathcat(base, path, ...query);
+	};
 }

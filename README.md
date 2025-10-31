@@ -1,8 +1,10 @@
 # `pathcat` 🐾
 
-Simply path/URL building in JavaScript. Intelligently handles URL params and query strings.
+Simply path/URL building in JavaScript. Intelligently handles URL params and
+query strings.
 
-This library owes thanks to urlcat, but unfortunately it seems to be abandoned. You can mostly use pathcat as a replacement.
+This library owes thanks to urlcat, which unfortunately seems to be abandoned.
+Consider `pathcat` as a suitable replacement.
 
 ## Features
 
@@ -15,53 +17,57 @@ This library owes thanks to urlcat, but unfortunately it seems to be abandoned. 
 ## Install
 
 ```sh
-yarn add pathcat
+bun add pathcat
 ```
 
 ## Usage
 
 ```typescript
-import { pathcat } from "pathcat";
+import { pathcat } from 'pathcat';
 
-pathcat("https://example.com", "/:id", {
+pathcat('https://example.com', '/:id', {
 	id: 123,
 });
 // => 'https://example.com/123'
 
-pathcat("https://example.com", "/:id", {
-	id: "123",
-	foo: "bar",
+pathcat('https://example.com', '/:id', {
+	id: '123',
+	foo: 'bar',
 });
 // => 'https://example.com/123?foo=bar'
 
 // Base URL is optional, works on just paths as well.
-pathcat("/users/:user_id/posts/:post_id", {
-	user_id: "123",
+pathcat('/users/:user_id/posts/:post_id', {
+	user_id: '123',
 	post_id: 456,
 	cool_flag: true,
 });
 // => '/users/123/posts/456?cool_flag=true'
 
 // You can also use arrays for query string values
-pathcat("/users/:user_id/posts/:post_id", {
-	user_id: "123",
+pathcat('/users/:user_id/posts/:post_id', {
+	user_id: '123',
 	post_id: 456,
 	cool_flag: true,
-	fields: ["title", "body"],
+	fields: ['title', 'body'],
 });
 // => '/users/123/posts/456?cool_flag=true&fields=title&fields=body'
 ```
 
 ## Benchmark:
 
-Results when running on an M3 Max
+Results when running on an M4 Max
 
 ```
-$ node --import=tsx benchmark.ts
+$ node -v
+v22.18.0
 
-With a base URL x 2,628,829 ops/sec ±0.70% (95 runs sampled)
-With no base URL x 3,160,695 ops/sec ±0.50% (96 runs sampled)
-With a base URL, and no params x 70,782,166 ops/sec ±1.93% (88 runs sampled)
+$ node --import=tsx benchmark
+pathcat() With a base URL x 3,576,027 ops/sec ±0.70% (91 runs sampled)
+pathcat() With no base URL x 4,275,819 ops/sec ±0.57% (95 runs sampled)
+pathcat() With a base URL, and no params x 80,913,930 ops/sec ±1.84% (89 runs sampled)
+join() with 2 arguments x 72,378,677 ops/sec ±1.76% (89 runs sampled)
+join() with many arguments x 5,595,168 ops/sec ±0.53% (92 runs sampled)
 ```
 
 ## Notes:
