@@ -126,12 +126,7 @@ function pathcatInternal(template: string, params: Query<string>) {
 
 		const withColon = colon.concat(key);
 		if (path.includes(withColon)) {
-			if (Array.isArray(value)) {
-				return withColon;
-			}
-
 			path = path.replace(`:${key}`, paramValueToString(value));
-
 			continue;
 		}
 

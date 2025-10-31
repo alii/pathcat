@@ -63,6 +63,9 @@ describe('pathcat()', () => {
 			'/users/1/posts/2?field=name&field=age&param=true'
 		);
 
+		assert.equal(pathcat('/d', { field: ['name', 'age'] }), '/d?field=name&field=age');
+		assert.equal(pathcat('/a', '/d', { field: ['name', 'age'] }), '/a/d?field=name&field=age');
+
 		assert.equal(
 			pathcat('https://example.com', '/users/:user_id/posts', {
 				user_id: '1234',
