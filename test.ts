@@ -171,6 +171,11 @@ describe('pathcat()', () => {
 		assert.equal(pathcat(base, '/path/to/resource'), 'test/path/to/resource');
 	});
 
+	it('should require the params object', () => {
+		// @ts-expect-error
+		pathcat('/users/:user/posts/:post');
+	});
+
 	it('Passing undefined should be treated as if the param was missing', () => {
 		assert.equal(
 			pathcat('/users/:user/posts/:post', { user: '1', post: undefined }),
@@ -335,6 +340,12 @@ describe('base()', () => {
 
 		// @ts-expect-error
 		api('/users/:user_id/posts', { limit: 10 });
+	});
+
+	it('should require the params object', () => {
+		const api = base('https://example.com');
+		// @ts-expect-error
+		api('/users/:user/posts/:post');
 	});
 
 	it('Should work with numeric and boolean param values', () => {
