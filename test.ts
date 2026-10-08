@@ -120,13 +120,13 @@ describe('pathcat()', () => {
 
 	it('Should handle missing params by avoiding them', () => {
 		assert.equal(
-			// @ts-expect-error
+			// @ts-expect-error missing path params
 			pathcat('/users/:user/posts/:post', { user: '1' }),
 			'/users/1/posts/:post'
 		);
 
 		assert.equal(
-			// @ts-expect-error
+			// @ts-expect-error missing path params
 			pathcat('https://example.com', '/users/:user/posts/:post', { user: '1' }),
 			'https://example.com/users/1/posts/:post'
 		);
@@ -162,7 +162,7 @@ describe('pathcat()', () => {
 	});
 
 	it('Should work with untyped base paths', () => {
-		let base: string = 'test';
+		const base: string = 'test';
 
 		assert.equal(
 			pathcat(base, {
@@ -175,7 +175,7 @@ describe('pathcat()', () => {
 	});
 
 	it('should require the params object', () => {
-		// @ts-expect-error
+		// @ts-expect-error missing path params
 		pathcat('/users/:user/posts/:post');
 	});
 
@@ -223,13 +223,13 @@ describe('base()', () => {
 	it('Should handle missing params by avoiding them', () => {
 		const api = base('https://example.com');
 		assert.equal(
-			// @ts-expect-error
+			// @ts-expect-error missing path params
 			api('/users/:user/posts/:post', { user: '1' }),
 			'https://example.com/users/1/posts/:post'
 		);
 
 		assert.equal(
-			// @ts-expect-error
+			// @ts-expect-error missing path params
 			api('/users/:user_id/posts/:post_id/comments/:comment_id', {
 				user_id: '123',
 				post_id: '456',
@@ -332,22 +332,22 @@ describe('base()', () => {
 
 	it('Should require all path params when query object is provided', () => {
 		const api = base('https://example.com');
-		// @ts-expect-error
+		// @ts-expect-error missing path params
 		api('/users/:user/posts/:post', { user: '1', limit: 10 });
 
-		// @ts-expect-error
+		// @ts-expect-error missing path params
 		api('/users/:user_id/posts/:post_id/comments/:comment_id', {
 			user_id: '123',
 			post_id: '456',
 		});
 
-		// @ts-expect-error
+		// @ts-expect-error missing path params
 		api('/users/:user_id/posts', { limit: 10 });
 	});
 
 	it('should require the params object', () => {
 		const api = base('https://example.com');
-		// @ts-expect-error
+		// @ts-expect-error missing path params
 		api('/users/:user/posts/:post');
 	});
 

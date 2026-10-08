@@ -16,6 +16,7 @@
 		"allowImportingTsExtensions": true,
 		"verbatimModuleSyntax": true,
 		"isolatedDeclarations": true,
-		"declaration": true
+		"declaration": true,
+		"types": ["node"]
 	}
 }

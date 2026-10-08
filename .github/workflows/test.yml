@@ -13,10 +13,34 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "22"
+          node-version: '22'
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      # bun lint, bun format and bun check come from oven-sh/bun#44805, which isn't released yet
+      - name: Download bun from PR 44805
+        run: |
+          mkdir -p "$RUNNER_TEMP/bun-pr"
+          bunx bun-pr@1.0.42 cda7bedbb5f677a621e11d76432b9b05f22bc00f
+          ln -s "$RUNNER_TEMP/bun-pr/bun-latest" "$RUNNER_TEMP/bun-pr/bun-44805"
+          echo "$RUNNER_TEMP/bun-pr" >> "$GITHUB_PATH"
+        env:
+          BUN_OUT_DIR: ${{ runner.temp }}/bun-pr
+          GITHUB_TOKEN: ${{ github.token }}
 
       - name: Install dependencies
         run: yarn install
+
+      - name: Lint
+        run: bun-44805 lint
+
+      - name: Format
+        run: bun-44805 format --check
+
+      - name: Typecheck
+        run: bun-44805 check
 
       - name: Run tests
         run: yarn test

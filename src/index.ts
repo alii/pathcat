@@ -22,10 +22,10 @@ export type DropProtocol<T extends string> = T extends `${'http' | 'https'}://${
 export type ExtractRouteParams<T extends string> = string extends T
 	? string
 	: T extends `${string}:${infer Param}/${infer Rest}`
-	? Param | ExtractRouteParams<Rest>
-	: T extends `${string}:${infer Param}`
-	? Param
-	: never;
+		? Param | ExtractRouteParams<Rest>
+		: T extends `${string}:${infer Param}`
+			? Param
+			: never;
 
 /**
  * Represents a query object, where each key is a parameter name and each value
@@ -105,7 +105,7 @@ export function pathcat<Path extends string>(
 export function pathcat(base: string, path?: string | Query<string>, query?: Query<string>) {
 	return pathcatInternal(
 		typeof path === 'string' ? join(base, path) : base,
-		typeof path === 'object' ? path : query ?? emptyobj
+		typeof path === 'object' ? path : (query ?? emptyobj)
 	);
 }
 

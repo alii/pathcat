@@ -21,7 +21,7 @@ suite
 		});
 	})
 	.add('pathcat() With a base URL, and no params', () => {
-		// @ts-expect-error
+		// @ts-expect-error missing path params
 		pathcat('https://example.com', '/users/:user_id/posts/:post_id/reactions');
 	})
 	.add('join() with 2 arguments', () => {
