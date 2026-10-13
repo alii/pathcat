@@ -20,7 +20,7 @@ export type DropProtocol<T extends string> = T extends `${'http' | 'https'}://${
  * Extracts url parameters from a route template string
  */
 export type ExtractRouteParams<T extends string> = string extends T
-	? string
+	? never
 	: T extends `${string}:${infer Param}/${infer Rest}`
 		? Param | ExtractRouteParams<Rest>
 		: T extends `${string}:${infer Param}`
@@ -125,7 +125,7 @@ function pathcatInternal(template: string, params: Query<string>) {
 		}
 
 		const withColon = colon.concat(key);
-		if (path.includes(withColon)) {
+		if (path.includes(withColon) && !Array.isArray(value)) {
 			path = path.replace(`:${key}`, paramValueToString(value));
 			continue;
 		}
